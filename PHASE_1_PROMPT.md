@@ -121,6 +121,141 @@ Project Settings:
 | PDFKit | PDF rendering | [PDFKit](https://developer.apple.com/documentation/pdfkit) |
 | CoreLocation | Prayer time location | [CoreLocation](https://developer.apple.com/documentation/corelocation) |
 
+### Hybrid VSCode + Xcode Workflow
+
+Use **VSCode** for fast editing and **Xcode** when Apple-specific tooling is needed.
+
+#### VSCode Setup
+
+**Required Extensions:**
+| Extension | Publisher | Purpose |
+|-----------|-----------|---------|
+| Swift | Swift Server Work Group | Syntax highlighting, code completion, IntelliSense |
+| CodeLLDB | Vadim Chugunov | Debugger support |
+
+**Optional Extensions:**
+| Extension | Purpose |
+|-----------|---------|
+| SwiftLint | Code style enforcement |
+| GitLens | Enhanced Git integration |
+
+**Verify Swift is installed:**
+```bash
+swift --version
+# Should show Swift 6.0 or later
+```
+
+#### Initial Project Creation (One-Time in Xcode)
+
+You must create the project in Xcode first, then edit in VSCode:
+
+```bash
+# 1. Clone the NoorReader repo
+git clone https://github.com/Inheriting-Islam/NoorReader.git
+cd NoorReader
+
+# 2. Open Xcode
+open -a Xcode
+```
+
+**In Xcode:**
+1. File → New → Project
+2. Select: **macOS** → **App**
+3. Configure:
+   - **Product Name:** `NoorReader`
+   - **Team:** Your Apple ID (or "None" for local development)
+   - **Organization Identifier:** `com.inheritingislam`
+   - **Interface:** `SwiftUI`
+   - **Storage:** `SwiftData`
+   - **Language:** `Swift`
+4. Save in the cloned `NoorReader/` directory
+5. Close Xcode
+
+#### Daily Development Workflow
+
+**Open project in VSCode:**
+```bash
+cd NoorReader
+code .
+```
+
+**Build from terminal:**
+```bash
+# Debug build
+xcodebuild -scheme NoorReader -configuration Debug build
+
+# Release build
+xcodebuild -scheme NoorReader -configuration Release build
+```
+
+**Run the app:**
+```bash
+# Find and run the built app
+open $(find ~/Library/Developer/Xcode/DerivedData -name "NoorReader.app" -path "*/Debug/*" | head -1)
+```
+
+**Quick build + run script** (save as `run.sh` in project root):
+```bash
+#!/bin/bash
+# run.sh - Build and run NoorReader
+set -e
+echo "بِسْمِ اللَّهِ - Building NoorReader..."
+xcodebuild -scheme NoorReader -configuration Debug build -quiet
+APP_PATH=$(find ~/Library/Developer/Xcode/DerivedData -name "NoorReader.app" -path "*/Debug/*" | head -1)
+echo "Running NoorReader..."
+open "$APP_PATH"
+```
+
+Make it executable:
+```bash
+chmod +x run.sh
+./run.sh
+```
+
+#### When to Use Each Tool
+
+| Task | Tool | Why |
+|------|------|-----|
+| Writing/editing code | VSCode | Faster, familiar keybindings |
+| Building project | Terminal (`xcodebuild`) | Scriptable, VSCode integrated terminal |
+| SwiftUI Previews | Xcode | Only available in Xcode Canvas |
+| Debugging UI issues | Xcode | Better SwiftUI debugging tools |
+| Adding new files | Either | VSCode is faster, but update Xcode project |
+| Adding frameworks | Xcode | Manages dependencies properly |
+| Code signing & archives | Xcode | Required for distribution |
+| Git operations | VSCode or terminal | VSCode has great Git integration |
+
+#### Adding New Files
+
+When you create new `.swift` files in VSCode, you need to add them to the Xcode project:
+
+**Option A: Quick add via Xcode (recommended)**
+1. Open `NoorReader.xcodeproj` in Xcode
+2. Right-click the target folder → "Add Files to NoorReader"
+3. Select your new files
+4. Close Xcode, continue in VSCode
+
+**Option B: Let Xcode discover on next build**
+- Files in the project folder are often auto-discovered
+- If not, use Option A
+
+#### Terminal Aliases (Optional)
+
+Add to your `~/.zshrc` or `~/.bashrc`:
+```bash
+# NoorReader development shortcuts
+alias nr-build="cd ~/path/to/NoorReader && xcodebuild -scheme NoorReader -configuration Debug build -quiet"
+alias nr-run="open \$(find ~/Library/Developer/Xcode/DerivedData -name 'NoorReader.app' -path '*/Debug/*' | head -1)"
+alias nr-dev="nr-build && nr-run"
+alias nr-xcode="open NoorReader.xcodeproj"
+```
+
+Then just type:
+```bash
+nr-dev    # Build and run
+nr-xcode  # Open in Xcode for previews
+```
+
 ---
 
 ## Project Structure
