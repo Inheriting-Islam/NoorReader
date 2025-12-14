@@ -157,6 +157,39 @@ struct MacMenuCommands: Commands {
             .keyboardShortcut("e", modifiers: [.command, .shift])
         }
 
+        // Study Menu
+        CommandMenu("Study") {
+            Button("Study Dashboard") {
+                NotificationCenter.default.post(name: .showStudyDashboard, object: nil)
+            }
+            .keyboardShortcut("s", modifiers: [.command, .shift])
+
+            Divider()
+
+            Button("Review Flashcards") {
+                NotificationCenter.default.post(name: .showFlashcardReview, object: nil)
+            }
+            .keyboardShortcut("r", modifiers: [.command, .shift])
+
+            Button("Quick Review Highlights") {
+                NotificationCenter.default.post(name: .showQuickReview, object: nil)
+            }
+            .keyboardShortcut("h", modifiers: [.command, .shift])
+
+            Divider()
+
+            Button("Generate Flashcards from Highlights...") {
+                NotificationCenter.default.post(name: .generateFlashcards, object: nil)
+            }
+
+            Divider()
+
+            Button("Start Pomodoro Timer") {
+                NotificationCenter.default.post(name: .startPomodoro, object: nil)
+            }
+            .keyboardShortcut("p", modifiers: [.command, .shift])
+        }
+
         // Remove the old Bookmarks menu as we've moved it to Annotations
         CommandGroup(replacing: .help) {
             Button("NoorReader Help") {
@@ -200,4 +233,11 @@ extension Notification.Name {
 
     // Focus Mode
     static let exitFocusMode = Notification.Name("exitFocusMode")
+
+    // Study
+    static let showStudyDashboard = Notification.Name("showStudyDashboard")
+    static let showFlashcardReview = Notification.Name("showFlashcardReview")
+    static let showQuickReview = Notification.Name("showQuickReview")
+    static let generateFlashcards = Notification.Name("generateFlashcards")
+    static let startPomodoro = Notification.Name("startPomodoro")
 }

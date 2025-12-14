@@ -38,22 +38,18 @@ struct MacContentView: View {
                 mainContent
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-                // Right Sidebar (Annotations)
-                if showAnnotationsSidebar && !isFocusMode {
+                // Right Sidebar (Annotations) - only show when a book is open
+                if showAnnotationsSidebar && !isFocusMode, let book = appState.selectedBook {
                     SidebarPanel {
-                        if let book = appState.selectedBook {
-                            AnnotationsSidebar(
-                                book: book,
-                                onNavigateToPage: { page in
-                                    NotificationCenter.default.post(
-                                        name: .goToPage,
-                                        object: page
-                                    )
-                                }
-                            )
-                        } else {
-                            InspectorPlaceholder()
-                        }
+                        AnnotationsSidebar(
+                            book: book,
+                            onNavigateToPage: { page in
+                                NotificationCenter.default.post(
+                                    name: .goToPage,
+                                    object: page
+                                )
+                            }
+                        )
                     }
                     .frame(width: 280)
                 }
@@ -284,29 +280,6 @@ struct FocusModeExitOverlay: View {
         .onHover { hovering in
             isHovering = hovering
         }
-    }
-}
-
-// MARK: - Inspector Placeholder
-
-struct InspectorPlaceholder: View {
-    var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "sidebar.right")
-                .font(.system(size: 48))
-                .foregroundStyle(.tertiary)
-
-            Text("Inspector Panel")
-                .font(.headline)
-                .foregroundStyle(.secondary)
-
-            Text("Select a book to view\nannotations and highlights")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-                .multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color(nsColor: .windowBackgroundColor))
     }
 }
 

@@ -18,6 +18,12 @@ struct MacReaderView: View {
     @State private var goToPageText = ""
     @State private var settingsViewModel = SettingsViewModel()
 
+    // AI feature states
+    @State private var showAISummary = false
+    @State private var showAIExplain = false
+    @State private var showFlashcardGenerator = false
+    @State private var selectedTextForAI: String = ""
+
     var body: some View {
         Group {
             if let viewModel {
@@ -37,6 +43,15 @@ struct MacReaderView: View {
         }
         .sheet(isPresented: $showGoToPage) {
             goToPageSheet
+        }
+        .sheet(isPresented: $showAISummary) {
+            AISummarySheet(selectedText: selectedTextForAI, pageRange: nil)
+        }
+        .sheet(isPresented: $showAIExplain) {
+            AIExplainSheet(selectedText: selectedTextForAI, context: nil)
+        }
+        .sheet(isPresented: $showFlashcardGenerator) {
+            FlashcardFromTextSheet(text: selectedTextForAI, book: book)
         }
         // Handle notifications
         .onReceive(NotificationCenter.default.publisher(for: .toggleSearch)) { _ in
@@ -218,6 +233,57 @@ struct MacReaderView: View {
                 Image(systemName: viewModel.isCurrentPageBookmarked() ? "bookmark.fill" : "bookmark")
             }
             .help("Toggle Bookmark")
+
+            Divider()
+
+            // AI Features Menu
+            Menu {
+                Button {
+                    if let selection = viewModel.currentSelection?.string, !selection.isEmpty {
+                        selectedTextForAI = selection
+                        showAISummary = true
+                    }
+                } label: {
+                    Label("Summarize Selection", systemImage: "text.alignleft")
+                }
+                .disabled(viewModel.currentSelection?.string?.isEmpty ?? true)
+
+                Button {
+                    if let selection = viewModel.currentSelection?.string, !selection.isEmpty {
+                        selectedTextForAI = selection
+                        showAIExplain = true
+                    }
+                } label: {
+                    Label("Explain Selection", systemImage: "questionmark.circle")
+                }
+                .disabled(viewModel.currentSelection?.string?.isEmpty ?? true)
+
+                Button {
+                    if let selection = viewModel.currentSelection?.string, !selection.isEmpty {
+                        selectedTextForAI = selection
+                        showFlashcardGenerator = true
+                    }
+                } label: {
+                    Label("Generate Flashcards", systemImage: "rectangle.on.rectangle")
+                }
+                .disabled(viewModel.currentSelection?.string?.isEmpty ?? true)
+
+                Divider()
+
+                Button {
+                    // Summarize current page
+                    if let page = viewModel.document?.page(at: viewModel.currentPage),
+                       let pageText = page.string, !pageText.isEmpty {
+                        selectedTextForAI = pageText
+                        showAISummary = true
+                    }
+                } label: {
+                    Label("Summarize Current Page", systemImage: "doc.text")
+                }
+            } label: {
+                Image(systemName: "sparkles")
+            }
+            .help("AI Features")
 
             // Theme picker
             ThemePicker()

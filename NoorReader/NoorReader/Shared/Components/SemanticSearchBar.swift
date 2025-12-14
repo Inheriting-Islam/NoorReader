@@ -274,9 +274,9 @@ struct SemanticSearchResultRow: View {
     }
 }
 
-// MARK: - Standalone Semantic Search View
+// MARK: - Simple Semantic Search View (Single Book)
 
-struct SemanticSearchView: View {
+struct SimpleSemanticSearchView: View {
     let book: Book
     let onNavigate: (Int) -> Void
 

@@ -42,6 +42,8 @@ final class LibraryViewModel {
             filtered = filtered.filter { $0.dateAdded >= thirtyDaysAgo }
         case .custom(let collection):
             filtered = filtered.filter { $0.collections.contains(collection) }
+        case .category(let category):
+            filtered = filtered.filter { $0.category?.id == category.id }
         }
 
         // Filter by search

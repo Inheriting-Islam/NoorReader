@@ -54,6 +54,7 @@ enum LibraryCollection: Hashable {
     case favorites
     case recentlyAdded
     case custom(Collection)
+    case category(BookCategory)
 
     var displayName: String {
         switch self {
@@ -62,6 +63,7 @@ enum LibraryCollection: Hashable {
         case .favorites: return "Favorites"
         case .recentlyAdded: return "Recently Added"
         case .custom(let collection): return collection.name
+        case .category(let category): return category.name
         }
     }
 
@@ -72,6 +74,7 @@ enum LibraryCollection: Hashable {
         case .favorites: return "star"
         case .recentlyAdded: return "clock"
         case .custom: return "folder"
+        case .category(let category): return category.icon
         }
     }
 }

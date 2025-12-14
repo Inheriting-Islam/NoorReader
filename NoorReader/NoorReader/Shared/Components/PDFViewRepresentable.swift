@@ -46,7 +46,7 @@ struct PDFViewRepresentable: NSViewRepresentable {
     func makeNSView(context: Context) -> ThemedPDFView {
         let pdfView = ThemedPDFView()
         pdfView.document = document
-        pdfView.autoScales = true
+        pdfView.autoScales = false
         pdfView.displayMode = displayMode
         pdfView.displayDirection = .vertical
         pdfView.delegate = context.coordinator
@@ -154,6 +154,12 @@ struct PDFViewRepresentable: NSViewRepresentable {
             guard let pdfView = notification.object as? PDFView else { return }
 
             DispatchQueue.main.async {
+                // Sync scale factor back to the binding so zoom persists
+                let newScale = pdfView.scaleFactor
+                if abs(self.parent.scaleFactor - newScale) > 0.01 {
+                    self.parent.scaleFactor = newScale
+                }
+
                 // Re-render highlights when scale changes
                 self.updateHighlights(self.parent.highlights, in: pdfView)
             }
@@ -320,15 +326,34 @@ class ThemedPDFView: PDFView {
         if displayMode == .twoUp || displayMode == .twoUpContinuous {
             if spineOverlay == nil {
                 let overlay = BookSpineOverlayView(frame: bounds)
-                overlay.autoresizingMask = [.width, .height]
+                overlay.translatesAutoresizingMaskIntoConstraints = false
                 overlay.updateTheme(currentTheme)
                 // Add as topmost subview so it renders over the PDF content
                 addSubview(overlay, positioned: .above, relativeTo: nil)
+
+                // Pin to all edges
+                NSLayoutConstraint.activate([
+                    overlay.leadingAnchor.constraint(equalTo: leadingAnchor),
+                    overlay.trailingAnchor.constraint(equalTo: trailingAnchor),
+                    overlay.topAnchor.constraint(equalTo: topAnchor),
+                    overlay.bottomAnchor.constraint(equalTo: bottomAnchor)
+                ])
+
                 spineOverlay = overlay
             } else {
                 // Ensure spine overlay is always on top
                 spineOverlay?.removeFromSuperview()
                 addSubview(spineOverlay!, positioned: .above, relativeTo: nil)
+
+                // Re-apply constraints
+                if let overlay = spineOverlay {
+                    NSLayoutConstraint.activate([
+                        overlay.leadingAnchor.constraint(equalTo: leadingAnchor),
+                        overlay.trailingAnchor.constraint(equalTo: trailingAnchor),
+                        overlay.topAnchor.constraint(equalTo: topAnchor),
+                        overlay.bottomAnchor.constraint(equalTo: bottomAnchor)
+                    ])
+                }
             }
         } else {
             spineOverlay?.removeFromSuperview()
@@ -338,9 +363,18 @@ class ThemedPDFView: PDFView {
         // Add paper texture overlay (below spine but above PDF content)
         if paperTexture && textureOverlay == nil {
             let texture = PaperTextureOverlayView(frame: bounds)
-            texture.autoresizingMask = [.width, .height]
+            texture.translatesAutoresizingMaskIntoConstraints = false
             texture.configure(theme: currentTheme, displayMode: displayMode)
             addSubview(texture, positioned: .below, relativeTo: spineOverlay)
+
+            // Pin to all edges
+            NSLayoutConstraint.activate([
+                texture.leadingAnchor.constraint(equalTo: leadingAnchor),
+                texture.trailingAnchor.constraint(equalTo: trailingAnchor),
+                texture.topAnchor.constraint(equalTo: topAnchor),
+                texture.bottomAnchor.constraint(equalTo: bottomAnchor)
+            ])
+
             textureOverlay = texture
         } else if !paperTexture {
             textureOverlay?.removeFromSuperview()

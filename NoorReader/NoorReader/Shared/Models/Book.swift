@@ -38,6 +38,12 @@ final class Book {
     @Relationship(deleteRule: .cascade, inverse: \Flashcard.book)
     var flashcards: [Flashcard] = []
 
+    // Category relationship (for Islamic book categorization)
+    var category: BookCategory?
+
+    // Source folder path (for external library imports)
+    var sourceFolder: String?
+
     // Computed property for standalone notes (not attached to highlights)
     var standaloneNotes: [Note] {
         notes.filter { $0.isStandalone }
