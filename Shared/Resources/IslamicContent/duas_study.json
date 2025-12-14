@@ -1,0 +1,49 @@
+{
+  "reminders": [
+    {
+      "id": "dua-001",
+      "type": "dua",
+      "arabic": "رَبِّ زِدْنِي عِلْمًا",
+      "transliteration": "Rabbi zidni ilma",
+      "english": "My Lord, increase me in knowledge.",
+      "source": "Quran 20:114",
+      "category": "seeking_knowledge"
+    },
+    {
+      "id": "dua-002",
+      "type": "dua",
+      "arabic": "اللَّهُمَّ انْفَعْنِي بِمَا عَلَّمْتَنِي وَعَلِّمْنِي مَا يَنْفَعُنِي وَزِدْنِي عِلْمًا",
+      "transliteration": "Allahumma infa'ni bima 'allamtani, wa 'allimni ma yanfa'uni, wa zidni 'ilma",
+      "english": "O Allah, benefit me with what You have taught me, teach me what will benefit me, and increase me in knowledge.",
+      "source": "Sunan Ibn Majah 251",
+      "category": "seeking_knowledge"
+    },
+    {
+      "id": "dua-003",
+      "type": "dua",
+      "arabic": "رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي وَاحْلُلْ عُقْدَةً مِنْ لِسَانِي يَفْقَهُوا قَوْلِي",
+      "transliteration": "Rabbi-shrah li sadri, wa yassir li amri, wahlul 'uqdatan min lisani, yafqahu qawli",
+      "english": "My Lord, expand for me my chest, ease for me my task, and untie the knot from my tongue that they may understand my speech.",
+      "source": "Quran 20:25-28",
+      "category": "ease_in_learning"
+    },
+    {
+      "id": "dua-004",
+      "type": "dua",
+      "arabic": "اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا وَرِزْقًا طَيِّبًا وَعَمَلًا مُتَقَبَّلًا",
+      "transliteration": "Allahumma inni as'aluka 'ilman nafi'an, wa rizqan tayyiban, wa 'amalan mutaqabbalan",
+      "english": "O Allah, I ask You for beneficial knowledge, good provision, and accepted deeds.",
+      "source": "Sunan Ibn Majah 925",
+      "category": "seeking_knowledge"
+    },
+    {
+      "id": "dua-005",
+      "type": "dua",
+      "arabic": "اللَّهُمَّ لَا سَهْلَ إِلَّا مَا جَعَلْتَهُ سَهْلًا وَأَنْتَ تَجْعَلُ الْحَزْنَ إِذَا شِئْتَ سَهْلًا",
+      "transliteration": "Allahumma la sahla illa ma ja'altahu sahla, wa Anta taj'alul-hazna idha shi'ta sahla",
+      "english": "O Allah, there is no ease except what You make easy, and You make difficulty easy if You wish.",
+      "source": "Sahih Ibn Hibban 2427",
+      "category": "ease_in_learning"
+    }
+  ]
+}
